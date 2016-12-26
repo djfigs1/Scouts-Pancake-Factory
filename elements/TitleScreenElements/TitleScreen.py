@@ -10,6 +10,7 @@ class TitleScreen:
         self.didQuit = False
         self.showFPS = False
         self.FPS_SURFACE = pygame.Surface((100, 50))
+        self.version = "0.1.0"
 
         self.randomBackground = self.returnRandomBackground()
         self.blitBackground(self.randomBackground)
@@ -52,6 +53,9 @@ class TitleScreen:
         self.containers = [self.playContainer, self.customizeContainer, self.supportContainer, self.buttonContainer]
 
         self.startGame = False
+
+        self.buttonClick = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonclick.wav'))
+        self.buttonNotSupportedSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/button_fail.wav'))
 
 
     def initBlit(self):
@@ -159,21 +163,27 @@ class TitleScreen:
         pygame.draw.rect(self.screen, BAR_COLOR, (0, int(self.SCREEN_H - (self.SCREEN_H / COVERAGE)), self.SCREEN_W, int(self.SCREEN_H / COVERAGE)))
 
         font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2secondary.ttf'), 36)
-        text = font.render("Version a1.0 - made by /u/djfigs1", True, (119,107,95))
+        text = font.render("Version " + self.version + " - made by /u/djfigs1", True, (119,107,95))
 
         self.screen.blit(text, (1375, 995))
 
     def mouseAction(self):
-        if self.quitButton.isMouseTouching():
-            pygame.quit()
-        elif self.playButton.isMouseTouching():
-            self.startGame = True
-        elif self.supportButton.isMouseTouching():
-            webbrowser.open("https://steamcommunity.com/tradeoffer/new/?partner=178459664&token=cQDpNvAs")
-
+        touched = False
         for button in self.buttons:
             if button.isMouseTouching():
+                self.buttonClick.play()
+                touched = True
                 print button.text + " button touched"
+        if touched:
+            if self.quitButton.isMouseTouching():
+                pygame.quit()
+            elif self.playButton.isMouseTouching():
+                self.startGame = True
+            elif self.supportButton.isMouseTouching():
+                webbrowser.open("https://steamcommunity.com/tradeoffer/new/?partner=178459664&token=cQDpNvAs")
+            else:
+                self.buttonNotSupportedSound.play()
+
 
     def scaleResSurface(self, x, y, width, height):
         # 1920:1080  500, 250, 100, 50
