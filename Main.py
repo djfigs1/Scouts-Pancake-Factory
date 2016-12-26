@@ -1,4 +1,4 @@
-import pygame, elements
+import pygame, elements, ctypes
 
 def main():
     pygame.mixer.init(44100, -16, 2, 512)
@@ -14,6 +14,11 @@ def main():
         Screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
     else:
         Screen = pygame.display.set_mode(SCREEN_SIZE)
+
+    if float(pygame.display.Info().current_w) / float(pygame.display.Info().current_h) != 16.0/9.0:
+        print ("You need a 16:9 resolution to play this game.")
+        ctypes.windll.user32.MessageBoxA(0, "You need a 16:9 resolution to play this game.", "Error", 0)
+        quit()
 
     pygame.display.set_caption("Scout's Pancake Factory")
     Clock = pygame.time.Clock()

@@ -24,8 +24,6 @@ class TSButton:
         self.color = self.BUTTON_COLOR
         self.textColor = self.TEXT_COLOR
 
-        self.CLICK = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonclick.wav'))
-        self.RELEASE = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonclickrelease.wav'))
         self.ROLLOVER = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonrollover.wav'))
 
     def updateButton(self):

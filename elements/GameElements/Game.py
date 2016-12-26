@@ -6,6 +6,7 @@ import pygame, os, random
 
 class Game:
     def __init__(self, screen):
+        # INIT Variables.
         self.screen = screen
         self.scout = SPFScout(screen)
         self.speed = 10
@@ -23,6 +24,7 @@ class Game:
         self.gameState = {}
         self.pause = False
 
+        # Check if there's a connected joystick.
         pygame.joystick.init()
         try:
             self.joystick = pygame.joystick.Joystick(0)
@@ -35,23 +37,13 @@ class Game:
 
     def eventLoop(self, Clock):
         pygame.mouse.set_visible(False)
+        # Reset the Screen
         self.screen.fill((0,0,0))
+
+        # Blit the Level Background
         self.screen.blit(self.levelBackground, (0,0))
 
-        # font = pygame.font.SysFont("TF2", 128)
-        # text = font.render(str(self.score), True, (255, 255, 0))
-        # text_w = text.get_rect().width
-        # text_h = text.get_rect().height
-        #
-        # self.screen.blit(text, ((1920 / 2) - text_w / 2, 150 - text_h / 2))
-        #
-        # font = pygame.font.SysFont("TF2", 64)
-        # text = font.render(str(self.miss), True, (255, 0, 0))
-        # text_w = text.get_rect().width
-        # text_h = text.get_rect().height
-        #
-        # self.screen.blit(text, ((1920 / 2) - text_w / 2, 225 - text_h / 2))
-
+        # Keep playing until the Player has reached a score of 20, or they've missed three pancakes.
         if (not self.score >= 20 and not self.miss >= 3):
             for powerup in self.powerups:
                 powerup.update(Clock)
@@ -74,12 +66,15 @@ class Game:
                     self.missSound.play()
                     self.miss += 1
         elif (not self.gameOver and self.score >= 20 and self.miss < 3):
+            # If they won, meaning they got 20 pancakes, with no more than two misses.
             self.winSound.play()
             self.gameOver = True
         elif (not self.gameOver and self.miss >= 3):
+            # If they didn't fill the above requirement, they've lost the game.
             self.loseSound.play()
             self.gameOver = True
         elif (self.gameOver):
+            # Draw the appropriate text.
             if (self.miss >= 3):
                 font = pygame.font.SysFont("TF2", 256)
                 text = font.render("YOU FAILED", True, (255, 0, 0))
@@ -99,14 +94,17 @@ class Game:
         self.scout.blit(Clock)
         self.scout.setSpeed(0)
 
+        # Update the Game State dictionary.
         self.gameState['score'] = self.score
         self.gameState['miss'] = self.miss
         self.gameState['FPS'] = Clock.get_fps()
         self.gameState['powerups'] = self.powerups
         self.gameState['time'] = Clock.get_time()
 
+        # Update the HUD.
         self.HUD.update(self.gameState)
 
+        # Handle Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
@@ -118,6 +116,7 @@ class Game:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     self.scout.setSpeed(self.speed)
 
+        # Handle joystick events ONLY IF there's a joystick initialized.
         if (self.joystick != None):
             self.joystick = pygame.joystick.Joystick(0)
             self.joystick.init()

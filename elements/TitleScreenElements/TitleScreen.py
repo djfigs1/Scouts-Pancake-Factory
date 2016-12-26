@@ -1,4 +1,4 @@
-import pygame, os, random, webbrowser
+import pygame, os, random, webbrowser, json
 from elements.TitleScreenElements.TSButton import TSButton
 from elements.TitleScreenElements.TSButtonContainer import TSButtonContainer
 from elements.TitleScreenElements.TSWindow import TSWindow
@@ -12,6 +12,8 @@ class TitleScreen:
         self.showFPS = False
         self.FPS_SURFACE = pygame.Surface((100, 50))
         self.version = "0.1.0"
+
+        self.languageFile = json.load(open(self.getLocalFile('../../resource/language/en_US.json'), 'r'))
 
         self.randomBackground = self.returnRandomBackground()
         self.blitBackground(self.randomBackground)
@@ -30,14 +32,14 @@ class TitleScreen:
         customizeContainerRes = self.scaleResSurface(50, 500, 520, 100)
         supportContainerRes = self.scaleResSurface(50, 725, 520, 70)
 
-        self.quitButton = TSButton(self.screen, quitButtonRes[0], quitButtonRes[1], quitButtonRes[2], quitButtonRes[3], "Quit", footerButton=True)
-        self.settingsButton = TSButton(self.screen, settingsButtonRes[0], settingsButtonRes[1], settingsButtonRes[2], settingsButtonRes[3], "Options", footerButton=True)
+        self.quitButton = TSButton(self.screen, quitButtonRes[0], quitButtonRes[1], quitButtonRes[2], quitButtonRes[3], self.getLanguageString('#SPF_Quit_Button_Title'), footerButton=True)
+        self.settingsButton = TSButton(self.screen, settingsButtonRes[0], settingsButtonRes[1], settingsButtonRes[2], settingsButtonRes[3], self.getLanguageString('#SPF_Settings_Button_Title'), footerButton=True)
 
-        self.playButton = TSButton(self.buttonSurface, 50, 300, 500, 75, "Play")
-        self.htpButton = TSButton(self.buttonSurface, 50, 600, 500, 75, "How to Play")
-        self.loadoutButton = TSButton(self.buttonSurface, 50, 400, 275, 75, "Loadout")
-        self.codeButton = TSButton(self.buttonSurface, 350, 400, 200, 75, "Code")
-        self.supportButton = TSButton(self.buttonSurface, 0,0,0,0, "Support")
+        self.playButton = TSButton(self.buttonSurface, 50, 300, 500, 75, self.getLanguageString('#SPF_Play_Button_Title'))
+        self.htpButton = TSButton(self.buttonSurface, 50, 600, 500, 75, self.getLanguageString('#SPF_HowToPlay_Button_Title'))
+        self.loadoutButton = TSButton(self.buttonSurface, 50, 400, 275, 75, self.getLanguageString('#SPF_Loadout_Button_Title'))
+        self.codeButton = TSButton(self.buttonSurface, 350, 400, 200, 75, self.getLanguageString('#SPF_Code_Button_Title'))
+        self.supportButton = TSButton(self.buttonSurface, 0,0,0,0, self.getLanguageString('#SPF_Support_Button_Title'))
 
         self.buttons = [self.quitButton, self.playButton, self.htpButton, self.settingsButton, self.loadoutButton,
                         self.codeButton, self.supportButton]
@@ -66,6 +68,19 @@ class TitleScreen:
         self.testWindow = TSWindow(self.testSurface)
         logoRes = self.scaleResSurface(50, 25, 520, 300)
         self.logoFile = pygame.transform.smoothscale(pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/menu/spf_title.png')).convert(), (logoRes[2] - 10 * 2, logoRes[3] - 10 * 2))
+
+    def getLocalFile(self, file):
+        print os.path.join(os.path.dirname(__file__), file)
+        return os.path.join(os.path.dirname(__file__), file)
+
+    def getLanguageString(self, string):
+        returnS = ""
+        try:
+            returnS = self.languageFile['strings'][string]
+        except KeyError:
+            returnS = string
+        return returnS
+
 
     def blit(self):
         self.screen.fill((0,0,0))
