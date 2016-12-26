@@ -3,12 +3,24 @@ import pygame
 class TSWindow:
     def __init__(self, surface):
         self.surface = surface
+        self.menuColor = (0,0,0)
+        self.surface_w = surface.get_width()
+        self.surface_h = surface.get_height()
+        self.isOpen = False
 
     def blit(self):
+        self.surface.fill((53, 50, 45))
         pass
+
+    def update(self):
+        if self.isOpen:
+            self.blit()
 
     def open(self):
-        pass
+        self.isOpen = True
 
     def close(self):
-        pass
+        self.isOpen = False
+
+    def toggleOpen(self):
+        self.isOpen = not self.isOpen

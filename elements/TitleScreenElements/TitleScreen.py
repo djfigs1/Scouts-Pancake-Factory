@@ -1,6 +1,7 @@
 import pygame, os, random, webbrowser
 from elements.TitleScreenElements.TSButton import TSButton
 from elements.TitleScreenElements.TSButtonContainer import TSButtonContainer
+from elements.TitleScreenElements.TSWindow import TSWindow
 
 class TitleScreen:
     def __init__(self, screen):
@@ -17,9 +18,6 @@ class TitleScreen:
 
         self.playRandomMusic()
         self.addFooter()
-
-        self.blitLogo()
-
         self.buttonSurface = self.screen #pygame.Surface((self.SCREEN_W, self.SCREEN_H))
 
         # non-containers, actual buttons
@@ -55,16 +53,22 @@ class TitleScreen:
         self.startGame = False
 
         self.buttonClick = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonclick.wav'))
+        self.buttonRelease = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonclickrelease.wav'))
         self.buttonNotSupportedSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/button_fail.wav'))
 
+        self.testSurface = pygame.Surface((800, 600))
+        self.testWindow = TSWindow(self.testSurface)
+        logoRes = self.scaleResSurface(50, 25, 520, 300)
+        self.logoFile = pygame.transform.smoothscale(pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/menu/spf_title.png')).convert(), (logoRes[2] - 10 * 2, logoRes[3] - 10 * 2))
 
-    def initBlit(self):
+    def blit(self):
         self.screen.fill((0,0,0))
         self.blitBackground(self.randomBackground)
         self.addFooter()
         self.blitLogo()
         for container in self.containers:
             container.drawBackground()
+        self.testWindow.update()
 
     def quit(self):
         if not self.didQuit:
@@ -91,31 +95,33 @@ class TitleScreen:
                     pygame.quit() # Exit
                 if event.key == pygame.K_F12:
                     self.showFPS = not self.showFPS
-                    if not self.showFPS:
-                        self.initBlit()
+                if event.key == pygame.K_F11:
+                    pygame.image.save (self.screen, "screenshot.jpeg")
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self.mouseAction()
+                self.mouseAction(True)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.mouseAction(False)
             elif event.type == pygame.QUIT:
                 pygame.quit()
 
+        self.blit()
         if self.showFPS:
             self.blitFPS(Clock)
         for button in self.buttons:
             button.updateButton()
 
+        if (self.testWindow.isOpen):
+            self.screen.blit(self.testSurface, (self.SCREEN_W / 2 - self.testSurface.get_width() / 2, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
+
         pygame.display.update()
 
     def blitLogo(self):
         BAR_COLOR = (53, 50, 45)
-        LOGO_FILE = os.path.join(os.path.dirname(__file__), '../../resource/images/menu/spf_title.png')
         PADDING = (10,10)
         AREA = self.scaleResSurface(50, 25, 520, 300)
 
-        background = pygame.image.load(LOGO_FILE).convert()
-        background = pygame.transform.smoothscale(background, (AREA[2] - PADDING[0] * 2, AREA[3] - PADDING[1] * 2))
-
         pygame.draw.rect(self.screen, BAR_COLOR, AREA)
-        self.screen.blit(background, (AREA[0] + PADDING[0], AREA[1] + PADDING[1]))
+        self.screen.blit(self.logoFile, (AREA[0] + PADDING[0], AREA[1] + PADDING[1]))
 
     def blitBackground(self, background):
         if not background == None:
@@ -167,13 +173,15 @@ class TitleScreen:
 
         self.screen.blit(text, (1375, 995))
 
-    def mouseAction(self):
+    def mouseAction(self, state):
         touched = False
         for button in self.buttons:
             if button.isMouseTouching():
-                self.buttonClick.play()
-                touched = True
-                print button.text + " button touched"
+                if not state:
+                    touched = True
+                    self.buttonRelease.play()
+                else:
+                    self.buttonClick.play()
         if touched:
             if self.quitButton.isMouseTouching():
                 pygame.quit()
@@ -181,6 +189,8 @@ class TitleScreen:
                 self.startGame = True
             elif self.supportButton.isMouseTouching():
                 webbrowser.open("https://steamcommunity.com/tradeoffer/new/?partner=178459664&token=cQDpNvAs")
+            elif self.settingsButton.isMouseTouching():
+                self.testWindow.toggleOpen()
             else:
                 self.buttonNotSupportedSound.play()
 
