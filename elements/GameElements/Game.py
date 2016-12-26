@@ -23,11 +23,18 @@ class Game:
         self.gameState = {}
         self.pause = False
 
+        pygame.joystick.init()
+        try:
+            self.joystick = pygame.joystick.Joystick(0)
+            self.joystick.init()
+        except pygame.error:
+            self.joystick = None
 
         self.testPowerup = SpeedPowerup(self.screen, self.scout)
         self.HUD = GameHUD(self.screen)
 
     def eventLoop(self, Clock):
+        pygame.mouse.set_visible(False)
         self.screen.fill((0,0,0))
         self.screen.blit(self.levelBackground, (0,0))
 
@@ -110,6 +117,16 @@ class Game:
                     self.scout.setSpeed(-self.speed)
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     self.scout.setSpeed(self.speed)
+
+        if (self.joystick != None):
+            self.joystick = pygame.joystick.Joystick(0)
+            self.joystick.init()
+
+            if self.joystick.get_hat(0)[0] > 0:
+                self.scout.setSpeed(self.speed)
+            elif self.joystick.get_hat(0)[0] < 0:
+                self.scout.setSpeed(-self.speed)
+
 
 
         pygame.display.update()

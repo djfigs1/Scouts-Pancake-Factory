@@ -51,10 +51,16 @@ class TitleScreen:
         self.containers = [self.playContainer, self.customizeContainer, self.supportContainer, self.buttonContainer]
 
         self.startGame = False
+        self.joystickConnected = False
 
         self.buttonClick = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonclick.wav'))
         self.buttonRelease = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonclickrelease.wav'))
         self.buttonNotSupportedSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/button_fail.wav'))
+        self.notificationSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/notification_alert.wav'))
+
+        self.notificationImage = pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/menu/button_alert.png')).convert()
+        self.notificationImage.set_colorkey((255,255,255))
+        self.blitNotificationImage = False
 
         self.testSurface = pygame.Surface((800, 600))
         self.testWindow = TSWindow(self.testSurface)
@@ -79,7 +85,7 @@ class TitleScreen:
     def blitFPS(self, Clock):
         pygame.draw.rect(self.FPS_SURFACE, (0,0,0), (0, 0, 100, 50))
 
-        font = pygame.font.SysFont(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2secondary.ttf'), 36)
+        font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2secondary.ttf'), 36)
         text = font.render(str(round(Clock.get_fps(), 2)), True, (255, 255, 0))
 
         text_w = text.get_rect().width
@@ -94,13 +100,20 @@ class TitleScreen:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit() # Exit
                 if event.key == pygame.K_F12:
-                    self.showFPS = not self.showFPS
+                    self.showFPS = True
                 if event.key == pygame.K_F11:
                     pygame.image.save (self.screen, "screenshot.jpeg")
+
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_F12:
+                    self.showFPS = False
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouseAction(True)
+
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.mouseAction(False)
+
             elif event.type == pygame.QUIT:
                 pygame.quit()
 
@@ -110,8 +123,16 @@ class TitleScreen:
         for button in self.buttons:
             button.updateButton()
 
+        if (self.blitNotificationImage):
+            self.screen.blit(self.notificationImage, (1700, 0))
+
         if (self.testWindow.isOpen):
             self.screen.blit(self.testSurface, (self.SCREEN_W / 2 - self.testSurface.get_width() / 2, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
+
+        if (pygame.joystick.get_count() > 0 and not self.joystickConnected):
+            self.notificationSound.play()
+            self.joystickConnected = True
+            self.blitNotificationImage = True
 
         pygame.display.update()
 
@@ -153,7 +174,7 @@ class TitleScreen:
             # No music was found (for some reason)
             randomPick = None
 
-        VOLUME = 0.5
+        VOLUME = 0.01
 
         # Load the random song that was picked
         if not randomPick == None:

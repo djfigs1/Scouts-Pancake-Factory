@@ -7,10 +7,13 @@ class TSWindow:
         self.surface_w = surface.get_width()
         self.surface_h = surface.get_height()
         self.isOpen = False
+        self.title = ""
+
+    def setTitle(self, title):
+        self.title = title
 
     def blit(self):
         self.surface.fill((53, 50, 45))
-        pass
 
     def update(self):
         if self.isOpen:
