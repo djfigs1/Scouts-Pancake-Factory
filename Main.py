@@ -2,17 +2,20 @@ import pygame, elements, ctypes
 
 def main():
     pygame.mixer.init(44100, -16, 2, 512)
+    pygame.mixer.music.set_volume(elements.ConfigUtility.getConfigSetting("volume"))
     pygame.init()
 
     FPS = 60
-    fullscreen = True
+    fullscreen = elements.ConfigUtility.getConfigSetting("fullscreen")
 
     # Screen & Pygame Initialization
-    SCREEN_SIZE = (1200, 720)
+
     if fullscreen:
         SCREEN_SIZE = (pygame.display.Info().current_w, pygame.display.Info().current_h)
         Screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
     else:
+        SCREEN_SIZE = (elements.ConfigUtility.getConfigSetting("windowed_width"),
+                       elements.ConfigUtility.getConfigSetting("windowed_height"))
         Screen = pygame.display.set_mode(SCREEN_SIZE)
 
     if float(pygame.display.Info().current_w) / float(pygame.display.Info().current_h) != 16.0/9.0:
@@ -28,10 +31,17 @@ def main():
     while True:
         if (state_game):
             GAME.eventLoop(Clock)
+            done = GAME.endGame
+            if (done):
+                state_game = False
+                GAME.quit()
+                TS.__init__(Screen)
         else:
             TS.eventLoop(Clock)
-            state_game = TS.startGame
-            if (state_game):
+            start = TS.startGame
+            if (start):
+                state_game = True
+                GAME.__init__(Screen)
                 TS.quit()
 
         Clock.tick(FPS)

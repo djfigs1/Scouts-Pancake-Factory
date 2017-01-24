@@ -1,4 +1,4 @@
-import pygame, os, random, webbrowser, json
+import pygame, os, random, webbrowser, json, elements.ConfigUtility
 from elements.TitleScreenElements.TSButton import TSButton
 from elements.TitleScreenElements.TSButtonContainer import TSButtonContainer
 from elements.TitleScreenElements.TSWindow import TSWindow
@@ -12,13 +12,16 @@ class TitleScreen:
         self.showFPS = False
         self.FPS_SURFACE = pygame.Surface((100, 50))
         self.version = "0.1.0"
+        pygame.mouse.set_visible(True)
 
         self.languageFile = json.load(open(self.getLocalFile('../../resource/language/en_US.json'), 'r'))
 
         self.randomBackground = self.returnRandomBackground()
         self.blitBackground(self.randomBackground)
 
-        self.playRandomMusic()
+        if elements.ConfigUtility.getConfigSetting("ts_music_enable"):
+            self.playRandomMusic()
+
         self.addFooter()
         self.buttonSurface = self.screen #pygame.Surface((self.SCREEN_W, self.SCREEN_H))
 
@@ -189,13 +192,10 @@ class TitleScreen:
             # No music was found (for some reason)
             randomPick = None
 
-        VOLUME = 0.01
-
         # Load the random song that was picked
         if not randomPick == None:
             print randomPick
             pygame.mixer.music.load(randomPick)
-            pygame.mixer.music.set_volume(VOLUME)
             pygame.mixer.music.play(-1) # Loop forever
 
     def addFooter(self):

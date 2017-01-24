@@ -13,6 +13,7 @@ class Game:
         self.score = 0
         self.miss = 0
         self.gameOver = False
+        self.endGame = False
         pygame.key.set_repeat(1,1)
         self.pancakes = [SPFPancake(self.screen, x=500, y=300)]
         self.powerups = [SpeedPowerup(self.screen, self.scout)]
@@ -34,6 +35,11 @@ class Game:
 
         self.testPowerup = SpeedPowerup(self.screen, self.scout)
         self.HUD = GameHUD(self.screen)
+
+    def quit(self):
+        pygame.mixer.stop()
+        self.endGame = False
+        pass
 
     def eventLoop(self, Clock):
         pygame.mouse.set_visible(False)
@@ -110,7 +116,7 @@ class Game:
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    quit()
+                    self.endGame = True
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     self.scout.setSpeed(-self.speed)
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -125,7 +131,5 @@ class Game:
                 self.scout.setSpeed(self.speed)
             elif self.joystick.get_hat(0)[0] < 0:
                 self.scout.setSpeed(-self.speed)
-
-
 
         pygame.display.update()
