@@ -18,6 +18,8 @@ class Powerup:
         except KeyError:
             valid = False
 
+        self.blit()
+
         if valid:
             if len(powerups) > 0:
                 for powerup in powerups:

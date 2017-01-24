@@ -2,16 +2,18 @@ import pygame, os, random, webbrowser, json, elements.ConfigUtility
 from elements.TitleScreenElements.TSButton import TSButton
 from elements.TitleScreenElements.TSButtonContainer import TSButtonContainer
 from elements.TitleScreenElements.TSWindow import TSWindow
-
+from elements.HUDElements.FloatText import FloatText
 class TitleScreen:
     def __init__(self, screen):
         self.screen = screen
         self.SCREEN_W = pygame.display.Info().current_w
         self.SCREEN_H = pygame.display.Info().current_h
         self.didQuit = False
-        self.showFPS = False
+        self.showFPS = elements.ConfigUtility.getConfigSetting("fps_counter")
         self.FPS_SURFACE = pygame.Surface((100, 50))
         self.version = "0.1.0"
+
+        self.FloatText = FloatText(screen, 25)
         pygame.mouse.set_visible(True)
 
         self.languageFile = json.load(open(self.getLocalFile('../../resource/language/en_US.json'), 'r'))
@@ -69,6 +71,7 @@ class TitleScreen:
 
         self.testSurface = pygame.Surface((800, 600))
         self.testWindow = TSWindow(self.testSurface)
+        self.testWindow.setTitle("Options")
         logoRes = self.scaleResSurface(50, 25, 520, 300)
         self.logoFile = pygame.transform.smoothscale(pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/menu/spf_title.png')).convert(), (logoRes[2] - 10 * 2, logoRes[3] - 10 * 2))
 
@@ -119,7 +122,8 @@ class TitleScreen:
                 if event.key == pygame.K_F12:
                     self.showFPS = True
                 if event.key == pygame.K_F11:
-                    pygame.image.save (self.screen, "screenshot.jpeg")
+                    self.FloatText.addText("Screenshot saved", 5)
+                    pygame.image.save(self.screen, "screenshot.jpeg")
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_F12:
@@ -144,13 +148,14 @@ class TitleScreen:
             self.screen.blit(self.notificationImage, (1700, 0))
 
         if (self.testWindow.isOpen):
-            self.testWindow.update((self.SCREEN_W / 2 - self.testSurface.get_width() / 2 + 100, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
+            self.testWindow.update((self.SCREEN_W / 2 - self.testSurface.get_width() / 2 + 100, self.SCREEN_H / 2 - self.testSurface.get_height() / 2), self)
             self.screen.blit(self.testSurface, (self.SCREEN_W / 2 - self.testSurface.get_width() / 2 + 100, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
 
         if (pygame.joystick.get_count() > 0 and not self.joystickConnected):
             self.notificationSound.play()
             self.joystickConnected = True
             self.blitNotificationImage = True
+        self.FloatText.update()
 
         pygame.display.update()
 
@@ -228,6 +233,7 @@ class TitleScreen:
             elif self.settingsButton.isMouseTouching():
                 self.testWindow.toggleOpen()
             else:
+                self.FloatText.addText("That feature hasn't been implemented yet", 5, color=(255,85,85))
                 self.buttonNotSupportedSound.play()
 
 
