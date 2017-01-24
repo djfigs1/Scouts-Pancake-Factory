@@ -8,6 +8,8 @@ class TSButton:
         self.width = width
         self.height = height
         self.text = text
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.visible = True
         self.footerButton = footerButton
         self.soundEffects = soundEffects
 
@@ -26,47 +28,57 @@ class TSButton:
 
         self.ROLLOVER = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonrollover.wav'))
 
-    def updateButton(self):
-        if self.isMouseTouching():
-            if (self.footerButton):
-                self.color = self.BUTTON_COLOR
-                self.textColor = self.F_BUTTON_COLOR
+    def updateButton(self, xOffset=0, yOffset=0):
+        if (self.visible):
+            if self.isMouseTouching(xOffset=xOffset, yOffset=yOffset):
+                if (self.footerButton):
+                    self.color = self.BUTTON_COLOR
+                    self.textColor = self.F_BUTTON_COLOR
+                else:
+                    self.color = self.HIGHLIGHT_COLOR
+                    self.textColor = self.BUTTON_COLOR
+
+                if not self.touched and self.soundEffects:
+                    self.ROLLOVER.play()
+                    self.touched = True
             else:
-                self.color = self.HIGHLIGHT_COLOR
-                self.textColor = self.BUTTON_COLOR
+                if (self.footerButton):
+                    self.color = self.F_BUTTON_COLOR
+                    self.textColor = self.BUTTON_COLOR
+                else:
+                    self.color = self.BUTTON_COLOR
+                    self.textColor = self.TEXT_COLOR
 
-            if not self.touched and self.soundEffects:
-                self.ROLLOVER.play()
-                self.touched = True
-        else:
-            if (self.footerButton):
-                self.color = self.F_BUTTON_COLOR
-                self.textColor = self.BUTTON_COLOR
-            else:
-                self.color = self.BUTTON_COLOR
-                self.textColor = self.TEXT_COLOR
+                if self.touched and self.soundEffects:
+                    self.touched = False
+            self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+            pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
 
-            if self.touched and self.soundEffects:
-                self.touched = False
+            if not self.text == "":
+                font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2build.ttf'),
+                                        self.FONT_SIZE)
+                text = font.render(self.text, True, self.textColor)
+                text_w = text.get_rect().width
+                text_h = text.get_rect().height
 
-        pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
-
-        if not self.text == "":
-            font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2build.ttf'), self.FONT_SIZE)
-            text = font.render(self.text, True, self.textColor)
-            text_w = text.get_rect().width
-            text_h = text.get_rect().height
-
-            self.surface.blit(text, ((self.x + self.width / 2) - text_w / 2, (self.y + self.height / 2) - text_h / 2 + 2))
+                self.surface.blit(text,
+                                  ((self.x + self.width / 2) - text_w / 2, (self.y + self.height / 2) - text_h / 2 + 2))
 
 
 
-    def isMouseTouching(self):
+
+    def isMouseTouching(self, xOffset=0, yOffset=0):
         mouseX = pygame.mouse.get_pos()[0]
         mouseY = pygame.mouse.get_pos()[1]
 
-        if mouseX >= self.x and mouseX <= self.x + self.width:
-            if mouseY >= self.y and mouseY <= self.y + self.height:
-                return True
+        # if mouseX >= self.x and mouseX <= self.x + self.width:
+        #     if mouseY >= self.y and mouseY <= self.y + self.height:
+        #         return True
+
+        if (self.rect.collidepoint(mouseX + xOffset, mouseY + yOffset)):
+            return True
 
         return False
+
+    def setVisible(self, vis):
+        self.visible = vis

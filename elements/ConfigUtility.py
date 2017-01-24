@@ -1,11 +1,20 @@
 import json
 
 def getConfigSetting(setting):
-    with open('config.json') as f:
+    js = getConfigJSON()
+    try:
+        result = js[setting]
+    except KeyError:
+        result = ""
+    return result
+
+def getConfigJSON():
+    with open('config.json', 'r') as f:
         js = json.load(f)
-        result = None
-        try:
-            result = js[setting]
-        except KeyError:
-            result = ""
-        return result
+        return js
+
+def writeConfigSetting(setting, value):
+    js = getConfigJSON()
+    with open('config.json', 'w') as f:
+        js[setting] = value
+        json.dump(js, f)

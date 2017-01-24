@@ -92,7 +92,6 @@ class TitleScreen:
         self.blitLogo()
         for container in self.containers:
             container.drawBackground()
-        self.testWindow.update()
 
     def quit(self):
         if not self.didQuit:
@@ -145,7 +144,8 @@ class TitleScreen:
             self.screen.blit(self.notificationImage, (1700, 0))
 
         if (self.testWindow.isOpen):
-            self.screen.blit(self.testSurface, (self.SCREEN_W / 2 - self.testSurface.get_width() / 2, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
+            self.testWindow.update((self.SCREEN_W / 2 - self.testSurface.get_width() / 2 + 100, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
+            self.screen.blit(self.testSurface, (self.SCREEN_W / 2 - self.testSurface.get_width() / 2 + 100, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
 
         if (pygame.joystick.get_count() > 0 and not self.joystickConnected):
             self.notificationSound.play()

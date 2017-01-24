@@ -35,7 +35,6 @@ class SpeedPowerup:
             self.blit(self.x, self.y)
             if (self.scout.testObjectColosion(self.getRect())):
                 # The scout has picked up the powerup.
-                print ("touched")
                 self.visible = False
                 self.startSound.play()
         else:
