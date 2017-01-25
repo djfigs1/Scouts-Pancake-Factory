@@ -19,8 +19,15 @@ class TSWindow:
 
         self.fps_button = TSButton.TSButton(surface, self.surface_w / 2 - 500 / 2, 160, 500, 50, "FPS Counter")
         self.test_button = TSButton.TSButton(surface, self.surface_w / 2 - 500 / 2, 220, 500, 50, "Float Test")
+        self.volume_down = TSButton.TSButton(surface, self.surface_w / 2 - 500 / 2, 280, 100, 50, "-")
+        self.volume_up = TSButton.TSButton(surface, self.surface_w / 2 + 150, 280, 100, 50, "+")
+        self.close_button = TSButton.TSButton(surface, self.surface_w / 2 - 250 / 2, self.surface_h - self.surface_h / 10, 250, 50, "Exit", footerButton=True)
         self.buttons.append(self.fps_button)
         self.buttons.append(self.test_button)
+        self.buttons.append(self.close_button)
+        self.buttons.append(self.volume_down)
+        self.buttons.append(self.volume_up)
+        self.vol = elements.ConfigUtility.getConfigSetting("volume")
 
         self.title = ""
         self.mouseClick = False
@@ -44,6 +51,7 @@ class TSWindow:
     def update(self, xy, instance):
         if self.isOpen:
             self.blit()
+            self.blitVolumeSlider(280)
 
         for button in self.buttons:
             if (button.isMouseTouching(xOffset=-xy[0], yOffset=-xy[1])) and not pygame.mouse.get_pressed()[0] and self.mouseClick and self.isOpen:
@@ -63,6 +71,27 @@ class TSWindow:
                         elements.ConfigUtility.writeConfigSetting("ts_music_enable", not enabled)
                 elif (button == self.test_button):
                     instance.FloatText.addText("--- TESTING ---", 5)
+                elif (button == self.close_button):
+                    self.isOpen = False
+                elif (button == self.volume_down):
+                    vol = pygame.mixer.music.get_volume()
+                    vol -= 0.1
+                    if vol < 0:
+                        vol = 0
+                    pygame.mixer.music.set_volume(vol)
+                    self.vol = vol
+                    elements.ConfigUtility.writeConfigSetting("volume", vol)
+                elif (button == self.volume_up):
+                    vol = pygame.mixer.music.get_volume()
+                    vol += 0.1
+                    if vol > 1:
+                        vol = 1
+                    else:
+                        vol = round(vol, 2)
+                    pygame.mixer.music.set_volume(vol)
+                    self.vol = vol
+                    elements.ConfigUtility.writeConfigSetting("volume", vol)
+
 
             button.setVisible(self.isOpen)
             button.updateButton(xOffset=-xy[0], yOffset=-xy[1])
@@ -76,3 +105,7 @@ class TSWindow:
 
     def toggleOpen(self):
         self.isOpen = not self.isOpen
+
+    def blitVolumeSlider(self, y):
+        pygame.draw.rect(self.surface, (100, 100, 100), (self.surface_w / 2 - 500 / 2 + 107, y, 285, 50))
+        pygame.draw.rect(self.surface, (255, 255, 255), (self.surface_w / 2 - 500 / 2 + 107, y, 285 * self.vol, 50))

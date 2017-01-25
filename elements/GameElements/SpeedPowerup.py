@@ -1,4 +1,4 @@
-import pygame, os
+import pygame, os, random
 
 class SpeedPowerup:
 
@@ -7,11 +7,13 @@ class SpeedPowerup:
         self.scout = scout
         self.powerTime = 0
         self.visible = True
-        self.x, self.y = 1000, 800
         self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/game/powerup/speed.png')).convert()
         self.startSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/game/powerupStart.wav'))
         self.endSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/game/powerupEnd.wav'))
         self.finished = False
+
+        self.x, self.y = 0, 0
+        self.x, self.y = random.randint(0, 1920 - self.getRect()[2]), 800
 
     def applyPowerup(self):
         speedMultiplier = 0

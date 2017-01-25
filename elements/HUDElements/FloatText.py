@@ -1,4 +1,4 @@
-import pygame, time, os
+import pygame, time, os, logging
 
 class FloatText:
     def __init__(self, surface, y):
@@ -6,6 +6,9 @@ class FloatText:
         self.surface = surface
         self.y = y
         self.FONT_SIZE = 24
+
+        self.logger = logging.getLogger('spf')
+        self.logger.info("Initalizing FloatText")
 
         self.font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2build.ttf'),
                                     self.FONT_SIZE)
@@ -27,7 +30,11 @@ class FloatText:
 
     def update(self):
         current_time = time.time()
+        if (len(self.texts) > 5):
+            self.logger.debug("Pending texts exceeds 5! Removing oldest text...")
+            self.texts.pop(0)
         for text in self.texts:
             if (current_time >= text['time']):
+                self.logger.debug("Text ran out of time, removing")
                 self.texts.remove(text)
         self.blit()

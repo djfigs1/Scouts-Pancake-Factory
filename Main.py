@@ -1,6 +1,11 @@
-import pygame, elements, ctypes
+import pygame, elements, ctypes, logging
 
 def main():
+    FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    logger = logging.getLogger("spf")
+
+    logger.info("Initializing pygame")
     pygame.mixer.init(44100, -16, 2, 512)
     pygame.mixer.music.set_volume(elements.ConfigUtility.getConfigSetting("volume"))
     pygame.init()
@@ -19,7 +24,7 @@ def main():
         Screen = pygame.display.set_mode(SCREEN_SIZE)
 
     if float(pygame.display.Info().current_w) / float(pygame.display.Info().current_h) != 16.0/9.0:
-        print ("You need a 16:9 resolution to play this game.")
+        logger.critical("This game requires a 16:9 resolution to play.")
         ctypes.windll.user32.MessageBoxA(0, "You need a 16:9 resolution to play this game.", "Error", 0)
         quit()
 
@@ -33,6 +38,7 @@ def main():
             GAME.eventLoop(Clock)
             done = GAME.endGame
             if (done):
+                logger.info("GAME is done, initing TitleScreen")
                 state_game = False
                 GAME.quit()
                 TS.__init__(Screen)
@@ -40,6 +46,7 @@ def main():
             TS.eventLoop(Clock)
             start = TS.startGame
             if (start):
+                logger.info("TitleScreen is done, initing GAME")
                 state_game = True
                 GAME.__init__(Screen)
                 TS.quit()

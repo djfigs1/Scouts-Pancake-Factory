@@ -1,7 +1,7 @@
-import pygame, os, random, webbrowser, json, elements.ConfigUtility
+import pygame, os, random, webbrowser, json, elements.ConfigUtility, time, logging
 from elements.TitleScreenElements.TSButton import TSButton
 from elements.TitleScreenElements.TSButtonContainer import TSButtonContainer
-from elements.TitleScreenElements.TSWindow import TSWindow
+from elements.TitleScreenElements.TSOptionsWindow import TSWindow
 from elements.HUDElements.FloatText import FloatText
 class TitleScreen:
     def __init__(self, screen):
@@ -12,6 +12,10 @@ class TitleScreen:
         self.showFPS = elements.ConfigUtility.getConfigSetting("fps_counter")
         self.FPS_SURFACE = pygame.Surface((100, 50))
         self.version = "0.1.0"
+        pygame.mouse.set_visible(True)
+
+        self.logger = logging.getLogger('spf')
+        self.logger.info("Initializing TitleScreen Class")
 
         self.FloatText = FloatText(screen, 25)
         pygame.mouse.set_visible(True)
@@ -76,7 +80,7 @@ class TitleScreen:
         self.logoFile = pygame.transform.smoothscale(pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/menu/spf_title.png')).convert(), (logoRes[2] - 10 * 2, logoRes[3] - 10 * 2))
 
     def getLocalFile(self, file):
-        print os.path.join(os.path.dirname(__file__), file)
+        self.logger.info("Grabbing language file from: " + os.path.join(os.path.dirname(__file__), file))
         return os.path.join(os.path.dirname(__file__), file)
 
     def getLanguageString(self, string):
@@ -121,13 +125,15 @@ class TitleScreen:
                     pygame.quit() # Exit
                 if event.key == pygame.K_F12:
                     self.showFPS = True
-                if event.key == pygame.K_F11:
-                    self.FloatText.addText("Screenshot saved", 5)
-                    pygame.image.save(self.screen, "screenshot.jpeg")
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_F12:
                     self.showFPS = False
+                if event.key == pygame.K_F11:
+                    t = time.localtime()
+                    time_string = str(t.tm_year) + "-" + str(t.tm_mon) + "-" + str(t.tm_mday) + "_" + str(t.tm_hour) + "." + str(t.tm_min) + "." + str(t.tm_sec)
+                    pygame.image.save(self.screen, os.path.join(os.path.expanduser("~"), "Pictures/SPF/" + time_string + ".jpg"))
+                    self.FloatText.addText("Screenshot saved as " + time_string, 5)
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouseAction(True)
@@ -139,10 +145,12 @@ class TitleScreen:
                 pygame.quit()
 
         self.blit()
-        if self.showFPS:
-            self.blitFPS(Clock)
+
         for button in self.buttons:
             button.updateButton()
+
+        if self.showFPS:
+            self.blitFPS(Clock)
 
         if (self.blitNotificationImage):
             self.screen.blit(self.notificationImage, (1700, 0))
@@ -152,6 +160,7 @@ class TitleScreen:
             self.screen.blit(self.testSurface, (self.SCREEN_W / 2 - self.testSurface.get_width() / 2 + 100, self.SCREEN_H / 2 - self.testSurface.get_height() / 2))
 
         if (pygame.joystick.get_count() > 0 and not self.joystickConnected):
+            self.logger.info("Found joystick")
             self.notificationSound.play()
             self.joystickConnected = True
             self.blitNotificationImage = True
@@ -178,7 +187,7 @@ class TitleScreen:
             randomPick = (os.path.join(os.path.dirname(__file__), BACKGROUND_DIRECTORY + random.choice(os.listdir(BACKGROUND_DIRECTORY))))
         except IndexError:
             # No backgrounds were found (for some reason)
-            print ("ERROR: No backgrounds were found.")
+            self.logger.error("No background images found")
             randomPick = None
 
         scaledImage = None
@@ -199,7 +208,7 @@ class TitleScreen:
 
         # Load the random song that was picked
         if not randomPick == None:
-            print randomPick
+            self.logger.info("Playing track from file: " + randomPick)
             pygame.mixer.music.load(randomPick)
             pygame.mixer.music.play(-1) # Loop forever
 
@@ -220,6 +229,7 @@ class TitleScreen:
             if button.isMouseTouching():
                 if not state:
                     touched = True
+                    self.logger.debug(button.text + " clicked")
                     self.buttonRelease.play()
                 else:
                     self.buttonClick.play()
@@ -228,6 +238,7 @@ class TitleScreen:
                 pygame.quit()
             elif self.playButton.isMouseTouching():
                 self.startGame = True
+                self.logger.debug("TitleScreen start game enabled")
             elif self.supportButton.isMouseTouching():
                 webbrowser.open("https://steamcommunity.com/tradeoffer/new/?partner=178459664&token=cQDpNvAs")
             elif self.settingsButton.isMouseTouching():

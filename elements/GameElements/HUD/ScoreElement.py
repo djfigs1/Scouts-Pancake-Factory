@@ -10,9 +10,9 @@ class Score:
 
     def blit(self, score, miss):
         scoreText = self.font.render(str(score), True, (255,255,255))
-        missText = self.secondaryFont.render(str(miss), True, (255,0,0))
+        # missText = self.secondaryFont.render(str(miss), True, (255,0,0))
         self.surface.blit(scoreText, (self.x, self.y))
-        self.surface.blit(missText, (self.x + 150, self.y + 50))
+        # self.surface.blit(missText, (self.x + 150, self.y + 50))
 
     def update(self, gameState):
         score = gameState['score']
