@@ -1,5 +1,7 @@
 import pygame, elements, ctypes, logging
 
+supportedResolutions = [(16,9), (16,10)]
+
 def main():
     FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
     logging.basicConfig(format=FORMAT, level=logging.INFO)
@@ -23,10 +25,18 @@ def main():
                        elements.ConfigUtility.getConfigSetting("windowed_height"))
         Screen = pygame.display.set_mode(SCREEN_SIZE)
 
-    if float(pygame.display.Info().current_w) / float(pygame.display.Info().current_h) != 16.0/9.0:
-        logger.critical("This game requires a 16:9 resolution to play.")
-        ctypes.windll.user32.MessageBoxA(0, "You need a 16:9 resolution to play this game.", "Error", 0)
+    supported = False
+    for resolution in supportedResolutions:
+        if float(pygame.display.Info().current_w) / float(pygame.display.Info().current_h) == float(resolution[0]) / float(resolution[1]):
+            supported = True
+            break
+
+    if not supported:
+        logger.critical("This game does not support your resolution.")
+        ctypes.windll.user32.MessageBoxA(0, "This game does not support your resolution.", "Error", 0)
         quit()
+
+
 
     pygame.display.set_caption("Scout's Pancake Factory")
     Clock = pygame.time.Clock()

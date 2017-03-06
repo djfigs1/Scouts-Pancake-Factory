@@ -4,6 +4,7 @@ from elements.GameElements.SpeedPowerup import SpeedPowerup
 from elements.GameElements.HUD.GameHUD import GameHUD
 from elements.HUDElements.FloatText import FloatText
 from elements.GameElements.HUD.PauseWindow import PauseWindow
+import elements.HUDElements.ScaleUtility as SU
 import pygame, os, random, logging
 
 class Game:
@@ -11,7 +12,7 @@ class Game:
         # INIT Variables.
         self.screen = screen
         self.scout = SPFScout(screen)
-        self.speed = 10
+        self.speed = SU.scaleFloatValue(10)
         self.score = 0
         self.miss = 0
         self.gameOver = False
@@ -24,8 +25,8 @@ class Game:
         self.winSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/game/win_music.wav'))
         self.loseSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/game/lose_music.wav'))
         self.missSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/game/miss.wav'))
-        self.levelBackground = pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/game/levels/background.png')).convert()
-        self.windowSurf = pygame.Surface((650, 200))
+        self.levelBackground = pygame.transform.smoothscale(pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/game/levels/background.png')).convert(), (pygame.display.Info().current_w, pygame.display.Info().current_h))
+        self.windowSurf = pygame.Surface(SU.scalePos(650, 200))
         self.window = PauseWindow(self.windowSurf)
         self.window.setTitle("Paused")
         self.gameState = {}
@@ -78,7 +79,7 @@ class Game:
                         self.score += 1
                         if (random.randint(1, 20) == 20):
                             self.powerups.append(SpeedPowerup(self.screen, self.scout))
-                    elif (pancakeRect[1] + pancakeRect[3] >= 1080):
+                    elif (pancakeRect[1] + pancakeRect[3] >= SU.scaleValue(1080)):
                         self.pancakes.remove(pancake)
                         self.pancakes.append(SPFPancake(self.screen))
                         # self.missSound.play()
@@ -95,19 +96,19 @@ class Game:
             elif (self.gameOver):
                 # Draw the appropriate text.
                 if (self.miss >= 3):
-                    font = pygame.font.SysFont("TF2", 256)
+                    font = pygame.font.SysFont("TF2", SU.scaleValue(256))
                     text = font.render("YOU FAILED", True, (255, 0, 0))
                     text_w = text.get_rect().width
                     text_h = text.get_rect().height
 
-                    self.screen.blit(text, ((1920 / 2) - text_w / 2, 400 - text_h / 2))
+                    self.screen.blit(text, ((SU.scaleValue(1920) / 2) - text_w / 2, SU.scaleValue(400) - text_h / 2))
                 else:
-                    font = pygame.font.SysFont("TF2", 256)
+                    font = pygame.font.SysFont("TF2", SU.scaleValue(256))
                     text = font.render("VICTORY", True, (0, 255, 0))
                     text_w = text.get_rect().width
                     text_h = text.get_rect().height
 
-                    self.screen.blit(text, ((1920 / 2) - text_w / 2, 400 - text_h / 2))
+                    self.screen.blit(text, ((SU.scaleValue(1920) / 2) - text_w / 2, SU.scaleValue(400) - text_h / 2))
         else:
             for pancake in self.pancakes:
                 pancake.blit()
@@ -142,7 +143,6 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.window.toggleOpen()
                     self.pause = not self.pause
-                    self.FloatText.addText("Toggled Pause", 5)
 
 
         # Handle joystick events ONLY IF there's a joystick initialized.

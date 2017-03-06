@@ -1,11 +1,12 @@
 import pygame, time, os, logging
+import ScaleUtility as SU
 
 class FloatText:
     def __init__(self, surface, y):
         self.texts = []
         self.surface = surface
         self.y = y
-        self.FONT_SIZE = 24
+        self.FONT_SIZE = SU.scaleValue(24)
 
         self.logger = logging.getLogger('spf')
         self.logger.info("Initalizing FloatText")
@@ -25,7 +26,7 @@ class FloatText:
         for text in self.texts:
             text = self.font.render(text['text'], True, text['color'])
             self.surface.blit(text, (self.surface.get_rect().width - text.get_rect().width - 10, y))
-            y += 30
+            y += SU.scaleValue(30)
 
 
     def update(self):

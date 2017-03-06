@@ -1,5 +1,6 @@
 import pygame, os
 from elements.TitleScreenElements.TSButton import TSButton
+import elements.HUDElements.ScaleUtility as SU
 
 class TSButtonContainer:
 
@@ -13,7 +14,7 @@ class TSButtonContainer:
         self.height = height
         self.padding = padding
         self.button_padding = button_padding
-        self.TITLE_TEXT_OFFSET = 50
+        self.TITLE_TEXT_OFFSET = SU.scaleValue(50)
 
         self.y_offset = self.y + self.TITLE_TEXT_OFFSET
 
@@ -25,7 +26,7 @@ class TSButtonContainer:
 
     def drawBackground(self):
         if not self.text == "":
-            font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2build.ttf'), 36)
+            font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2build.ttf'), SU.scaleValue(36))
             text = font.render(self.text, True, (self.TEXT_COLOR))
             text_h = text.get_rect().height
 

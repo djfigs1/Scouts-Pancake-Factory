@@ -1,4 +1,5 @@
 import os, pygame
+import elements.HUDElements.ScaleUtility as SU
 
 class TSButton:
     def __init__(self, surface, x, y, width, height, text, footerButton=False, soundEffects=True):
@@ -21,7 +22,7 @@ class TSButton:
         self.F_TEXT_COLOR = (119,107,95)
         self.touched = False
 
-        self.FONT_SIZE = 36
+        self.FONT_SIZE = SU.scaleValue(36)
 
         self.color = self.BUTTON_COLOR
         self.textColor = self.TEXT_COLOR

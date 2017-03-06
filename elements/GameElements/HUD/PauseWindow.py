@@ -1,20 +1,21 @@
 import pygame, elements, elements.TitleScreenElements.TitleScreen, os
 from elements.TitleScreenElements.TSButton import TSButton
+import elements.HUDElements.ScaleUtility as SU
 
 class PauseWindow:
     def __init__(self, surface):
         self.surface = surface
         self.menuColor = (53, 50, 45)
         self.menuBackgroundColor = (119,107,95)
-        self.borderThickness = 5
+        self.borderThickness = SU.scaleValue(5)
         self.textColor = (255,255,255)
         self.surface_w = surface.get_width()
         self.surface_h = surface.get_height()
         self.isOpen = False
         self.buttons = []
 
-        self.menuexit_button = TSButton(surface, self.surface_w / 2 - 500 / 2, 75, 500, 50, "Exit to Menu")
-        self.exit_button = TSButton(surface, self.surface_w / 2 - 250 / 2, self.surface_h - 50, 250, 50, "Resume", footerButton=True)
+        self.menuexit_button = TSButton(surface, self.surface_w / 2 - SU.scaleValue(500) / 2, SU.scaleValue(75), SU.scaleValue(500), SU.scaleValue(50), "Exit to Menu")
+        self.exit_button = TSButton(surface, self.surface_w / 2 - SU.scaleValue(250) / 2, self.surface_h - SU.scaleValue(50), SU.scaleValue(250), SU.scaleValue(50), "Resume", footerButton=True)
         self.buttons.append(self.exit_button)
         self.buttons.append(self.menuexit_button)
 
@@ -22,7 +23,7 @@ class PauseWindow:
 
         self.title = ""
         self.mouseClick = False
-        self.FONT_SIZE = 60
+        self.FONT_SIZE = SU.scaleValue(60)
         self.font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../../resource/fonts/tf2build.ttf'),
                                      self.FONT_SIZE)
 

@@ -3,6 +3,7 @@ from elements.TitleScreenElements.TSButton import TSButton
 from elements.TitleScreenElements.TSButtonContainer import TSButtonContainer
 from elements.TitleScreenElements.TSOptionsWindow import TSWindow
 from elements.HUDElements.FloatText import FloatText
+import elements.HUDElements.ScaleUtility as ScaleUtility
 class TitleScreen:
     def __init__(self, screen):
         self.screen = screen
@@ -10,14 +11,14 @@ class TitleScreen:
         self.SCREEN_H = pygame.display.Info().current_h
         self.didQuit = False
         self.showFPS = elements.ConfigUtility.getConfigSetting("fps_counter")
-        self.FPS_SURFACE = pygame.Surface((100, 50))
+        self.FPS_SURFACE = pygame.Surface(ScaleUtility.scalePos(100, 50))
         self.version = "0.1.0"
         pygame.mouse.set_visible(True)
 
         self.logger = logging.getLogger('spf')
         self.logger.info("Initializing TitleScreen Class")
 
-        self.FloatText = FloatText(screen, 25)
+        self.FloatText = FloatText(screen, ScaleUtility.scaleValue(25))
         pygame.mouse.set_visible(True)
 
         self.languageFile = json.load(open(self.getLocalFile('../../resource/language/en_US.json'), 'r'))
@@ -36,10 +37,10 @@ class TitleScreen:
         settingsButtonRes = self.scaleResSurface(500, 975, 400, 75)
 
         # container buttons
-        playContainerRes = self.scaleResSurface(50, 350, 520, 70)
-        htpContainerRes = self.scaleResSurface(50, 800, 520, 70)
-        customizeContainerRes = self.scaleResSurface(50, 500, 520, 100)
-        supportContainerRes = self.scaleResSurface(50, 725, 520, 70)
+        playContainerRes = ScaleUtility.scaleResSurface(50, 350, 520, 70)
+        htpContainerRes = ScaleUtility.scaleResSurface(50, 800, 520, 70)
+        customizeContainerRes = ScaleUtility.scaleResSurface(50, 500, 520, 100)
+        supportContainerRes = ScaleUtility.scaleResSurface(50, 725, 520, 70)
 
         self.quitButton = TSButton(self.screen, quitButtonRes[0], quitButtonRes[1], quitButtonRes[2], quitButtonRes[3], self.getLanguageString('#SPF_Quit_Button_Title'), footerButton=True)
         self.settingsButton = TSButton(self.screen, settingsButtonRes[0], settingsButtonRes[1], settingsButtonRes[2], settingsButtonRes[3], self.getLanguageString('#SPF_Settings_Button_Title'), footerButton=True)
@@ -53,11 +54,11 @@ class TitleScreen:
         self.buttons = [self.quitButton, self.playButton, self.htpButton, self.settingsButton, self.loadoutButton,
                         self.codeButton, self.supportButton]
         self.containButtons = [self.loadoutButton, self.codeButton]
-
-        self.playContainer = TSButtonContainer(self.screen, "", self.playButton, (8, 10), 0, playContainerRes[0], playContainerRes[1], playContainerRes[2], playContainerRes[3])
-        self.customizeContainer = TSButtonContainer(self.screen, "Customize", self.containButtons, (5, 10), 10, customizeContainerRes[0], customizeContainerRes[1], customizeContainerRes[2], customizeContainerRes[3])
-        self.supportContainer = TSButtonContainer(self.screen, "", self.supportButton, (8, 10), 0, supportContainerRes[0], supportContainerRes[1], supportContainerRes[2], supportContainerRes[3])
-        self.buttonContainer = TSButtonContainer(self.screen, "", self.htpButton, (8, 10), 0, htpContainerRes[0], htpContainerRes[1], htpContainerRes[2], htpContainerRes[3])
+        padding = (ScaleUtility.scaleValue(8), ScaleUtility.scaleValue(10))
+        self.playContainer = TSButtonContainer(self.screen, "", self.playButton,  padding, 0, playContainerRes[0], playContainerRes[1], playContainerRes[2], playContainerRes[3])
+        self.customizeContainer = TSButtonContainer(self.screen, "Customize", self.containButtons, (ScaleUtility.scaleValue(5), ScaleUtility.scaleValue(10)), ScaleUtility.scaleValue(10), customizeContainerRes[0], customizeContainerRes[1], customizeContainerRes[2], customizeContainerRes[3])
+        self.supportContainer = TSButtonContainer(self.screen, "", self.supportButton, padding, 0, supportContainerRes[0], supportContainerRes[1], supportContainerRes[2], supportContainerRes[3])
+        self.buttonContainer = TSButtonContainer(self.screen, "", self.htpButton, padding, 0, htpContainerRes[0], htpContainerRes[1], htpContainerRes[2], htpContainerRes[3])
                                                  
         self.containers = [self.playContainer, self.customizeContainer, self.supportContainer, self.buttonContainer]
 
@@ -73,11 +74,11 @@ class TitleScreen:
         self.notificationImage.set_colorkey((255,255,255))
         self.blitNotificationImage = False
 
-        self.testSurface = pygame.Surface((800, 600))
+        self.testSurface = pygame.Surface(ScaleUtility.scalePos(800, 600))
         self.testWindow = TSWindow(self.testSurface)
         self.testWindow.setTitle("Options")
-        logoRes = self.scaleResSurface(50, 25, 520, 300)
-        self.logoFile = pygame.transform.smoothscale(pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/menu/spf_title.png')).convert(), (logoRes[2] - 10 * 2, logoRes[3] - 10 * 2))
+        logoRes = ScaleUtility.scaleResSurface(50, 25, 520, 300)
+        self.logoFile = pygame.transform.smoothscale(pygame.image.load(os.path.join(os.path.dirname(__file__), '../../resource/images/menu/spf_title.png')).convert(), (logoRes[2] - ScaleUtility.scaleValue(10) * 2, logoRes[3] - ScaleUtility.scaleValue(10) * 2))
 
     def getLocalFile(self, file):
         self.logger.info("Grabbing language file from: " + os.path.join(os.path.dirname(__file__), file))
@@ -107,16 +108,16 @@ class TitleScreen:
             self.didQuit = True
 
     def blitFPS(self, Clock):
-        pygame.draw.rect(self.FPS_SURFACE, (0,0,0), (0, 0, 100, 50))
+        pygame.draw.rect(self.FPS_SURFACE, (0,0,0), ScaleUtility.scaleResSurface(0, 0, 100, 50))
 
-        font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2secondary.ttf'), 36)
+        font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2secondary.ttf'), ScaleUtility.scaleValue(36))
         text = font.render(str(round(Clock.get_fps(), 2)), True, (255, 255, 0))
 
         text_w = text.get_rect().width
         text_h = text.get_rect().height
 
-        self.FPS_SURFACE.blit(text, ((0 + 100 / 2) - text_w / 2, (0 + 50 / 2) - text_h / 2 + 2))
-        self.screen.blit(self.FPS_SURFACE, (1750,25))
+        self.FPS_SURFACE.blit(text, ((0 + ScaleUtility.scaleValue(100) / 2) - text_w / 2, (0 + ScaleUtility.scaleValue(50) / 2) - text_h / 2))
+        self.screen.blit(self.FPS_SURFACE, ScaleUtility.scalePos(1750,25))
 
     def eventLoop(self, Clock):
         for event in pygame.event.get():
@@ -170,8 +171,8 @@ class TitleScreen:
 
     def blitLogo(self):
         BAR_COLOR = (53, 50, 45)
-        PADDING = (10,10)
-        AREA = self.scaleResSurface(50, 25, 520, 300)
+        PADDING = ScaleUtility.scalePos(10,10)
+        AREA = ScaleUtility.scaleResSurface(50, 25, 520, 300)
 
         pygame.draw.rect(self.screen, BAR_COLOR, AREA)
         self.screen.blit(self.logoFile, (AREA[0] + PADDING[0], AREA[1] + PADDING[1]))
@@ -218,10 +219,10 @@ class TitleScreen:
 
         pygame.draw.rect(self.screen, BAR_COLOR, (0, int(self.SCREEN_H - (self.SCREEN_H / COVERAGE)), self.SCREEN_W, int(self.SCREEN_H / COVERAGE)))
 
-        font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2secondary.ttf'), 36)
+        font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2secondary.ttf'), ScaleUtility.scaleValue(36))
         text = font.render("Version " + self.version + " - made by /u/djfigs1", True, (119,107,95))
 
-        self.screen.blit(text, (1375, 995))
+        self.screen.blit(text, ScaleUtility.scalePos(1375, 995))
 
     def mouseAction(self, state):
         touched = False

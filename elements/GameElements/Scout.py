@@ -1,4 +1,5 @@
 import pygame, os
+import elements.HUDElements.ScaleUtility as SU
 
 class SPFScout:
     def __init__(self, surface):
@@ -10,7 +11,7 @@ class SPFScout:
         self.right = True
 
         self.x = 0
-        self.y = 750
+        self.y = SU.scaleValue(750)
 
         self.loadTextures()
 
@@ -22,6 +23,7 @@ class SPFScout:
             self.runPoses.append(pygame.image.load(os.path.join(os.path.dirname(__file__), RUN_DIRECTORY + "run" + str(x) + ".png")).convert())
             rect = self.runPoses[x].get_rect()
             self.runPoses[x] = pygame.transform.scale(self.runPoses[x], (int(float(rect[2]) / 4.0), int(float(rect[3]) / 4.0)))
+            self.runPoses[x] = pygame.transform.scale(self.runPoses[x], SU.scalePos(self.runPoses[x].get_rect().width, self.runPoses[x].get_rect().height))
             self.runPoses[x].set_colorkey((0,255,0))
 
     def getRect(self):
