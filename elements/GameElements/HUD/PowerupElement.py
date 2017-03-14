@@ -28,6 +28,6 @@ class Powerup:
                         time = powerup.powerTime
                         text = self.font.render("POWERUP", True, (255,255,255))
                         percentTime = float(time) / 10000.0
-                        pygame.draw.rect(self.surface, (100,100,100), (self.x, self.surface.get_rect()[3] / 2 - 25, 800, 50))
-                        pygame.draw.rect(self.surface, (255,255,255), (self.x, self.surface.get_rect()[3] / 2 - 25, 800 - int(800.0 * percentTime), 50))
-                        self.surface.blit(text, (self.x + 800 / 2 - text.get_width() / 2, self.surface.get_rect()[3] / 2 - text.get_height() / 2 - 45))
+                        pygame.draw.rect(self.surface, (100,100,100), (self.x, self.surface.get_rect()[3] / 2 - SU.scaleValue(25), SU.scaleValue(800), SU.scaleValue(50)))
+                        pygame.draw.rect(self.surface, (255,255,255), (self.x, self.surface.get_rect()[3] / 2 - SU.scaleValue(25), SU.scaleValue(800) - int(SU.scaleFloatValue(800.0) * percentTime), SU.scaleValue(50)))
+                        self.surface.blit(text, (self.x + SU.scaleValue(800) / 2 - text.get_width() / 2, self.surface.get_rect()[3] / 2 - text.get_height() / 2 - SU.scaleValue(45)))

@@ -52,3 +52,9 @@ def scaleMouse():
     scaled_Y = int(float(mouse_Y) / float(SCREEN_H) * float(SCALE_BASE[1]))
 
     return (scaled_X, scaled_Y)
+
+def centerHorizontally(width):
+    return scaleValue(1920) / 2 - width / 2
+
+def centerVertically(height):
+    return scaleValue(1080) / 2 - height / 2

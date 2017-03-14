@@ -25,7 +25,7 @@ def main():
                        elements.ConfigUtility.getConfigSetting("windowed_height"))
         Screen = pygame.display.set_mode(SCREEN_SIZE)
 
-    supported = False
+    supported = True
     for resolution in supportedResolutions:
         if float(pygame.display.Info().current_w) / float(pygame.display.Info().current_h) == float(resolution[0]) / float(resolution[1]):
             supported = True

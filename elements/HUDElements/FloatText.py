@@ -25,7 +25,7 @@ class FloatText:
         y = self.y
         for text in self.texts:
             text = self.font.render(text['text'], True, text['color'])
-            self.surface.blit(text, (self.surface.get_rect().width - text.get_rect().width - 10, y))
+            self.surface.blit(text, (self.surface.get_rect().width - text.get_rect().width - SU.scaleValue(10), y))
             y += SU.scaleValue(30)
 
 

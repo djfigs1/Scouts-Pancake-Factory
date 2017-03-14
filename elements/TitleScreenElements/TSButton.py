@@ -28,6 +28,8 @@ class TSButton:
         self.textColor = self.TEXT_COLOR
 
         self.ROLLOVER = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/menu/buttonrollover.wav'))
+        self.font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2build.ttf'),
+                                        self.FONT_SIZE)
 
     def updateButton(self, xOffset=0, yOffset=0):
         if (self.visible):
@@ -56,9 +58,8 @@ class TSButton:
             pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
 
             if not self.text == "":
-                font = pygame.font.Font(os.path.join(os.path.dirname(__file__), '../../resource/fonts/tf2build.ttf'),
-                                        self.FONT_SIZE)
-                text = font.render(self.text, True, self.textColor)
+                
+                text = self.font.render(self.text, True, self.textColor)
                 text_w = text.get_rect().width
                 text_h = text.get_rect().height
 
