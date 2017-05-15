@@ -10,8 +10,8 @@ class SpeedPowerup:
         self.powerTime = 0
         self.visible = True
         self.vol = elements.ConfigUtility.getConfigSetting("volume")
-        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), '../../../resource/images/game/powerup/speed.png')).convert()
-        self.image = pygame.transform.smoothscale(self.image, SU.scalePos(self.image.get_rect().width, self.image.get_rect().height))
+        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), '../../../resource/images/game/powerup/speed.png')).convert_alpha()
+        self.image = pygame.transform.smoothscale(self.image, SU.scalePos(128, 128))
         self.startSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../../resource/sound/game/powerupStart.wav'))
         self.endSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../../resource/sound/game/powerupEnd.wav'))
         self.startSound.set_volume(self.vol)

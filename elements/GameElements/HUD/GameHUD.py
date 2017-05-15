@@ -16,7 +16,6 @@ class GameHUD:
 
     def drawBase(self):
         self.footerSurface.fill((0, 0, 0))
-        COVERAGE = 7
         BAR_COLOR = (53, 50, 45)
         pygame.draw.rect(self.footerSurface, BAR_COLOR, (0, 0, self.footerSurface.get_width(), self.footerSurface.get_height()))
 

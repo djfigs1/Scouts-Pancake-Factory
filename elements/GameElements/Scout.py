@@ -24,7 +24,7 @@ class SPFScout:
         items = len(os.listdir(RUN_DIRECTORY))
 
         for x in range(0, items):
-            self.runPoses.append(pygame.image.load(os.path.join(os.path.dirname(__file__), RUN_DIRECTORY + "run" + str(x) + ".png")).convert())
+            self.runPoses.append(pygame.image.load(os.path.join(os.path.dirname(__file__), RUN_DIRECTORY + "run" + str(x) + ".png")).convert_alpha())
             rect = self.runPoses[x].get_rect()
             self.runPoses[x] = pygame.transform.scale(self.runPoses[x], (int(float(rect[2]) / 4.0), int(float(rect[3]) / 4.0)))
             self.runPoses[x] = pygame.transform.scale(self.runPoses[x], SU.scalePos(self.runPoses[x].get_rect().width, self.runPoses[x].get_rect().height))
@@ -32,7 +32,7 @@ class SPFScout:
 
     def jump(self):
         if not self.jumps >= 2:
-            self.vel = -300
+            self.vel = -400
             self.jumps += 1
 
     def getRect(self):
@@ -43,7 +43,8 @@ class SPFScout:
 
     def setSpeed(self, speed):
         self.speed = speed
-
+        if (self.jumps > 0):
+            self.speed /= 3
         if speed > 0:
             self.right = True
         elif speed < 0:
@@ -69,7 +70,7 @@ class SPFScout:
     def update(self, clock, pause):
         if not pause:
             if not self.pos == 0 or not self.vel == 0:
-                vel, pos = Physics.Gravity(256, self.pos, self.vel, float(clock.get_time()) / 1000.0)
+                vel, pos = Physics.Gravity(800, self.pos, self.vel, float(clock.get_time()) / 1000.0)
                 if (pos > 0):
                     pos = 0
                     vel = 0

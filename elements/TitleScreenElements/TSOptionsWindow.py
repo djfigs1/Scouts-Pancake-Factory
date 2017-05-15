@@ -1,7 +1,7 @@
 import pygame, TSButton, elements, elements.TitleScreenElements.TitleScreen, os
 import elements.HUDElements.ScaleUtility as SU
 
-class TSWindow:
+class TSWindow(object):
     def __init__(self, surface):
         self.surface = surface
         self.menuColor = (53, 50, 45)
@@ -39,8 +39,6 @@ class TSWindow:
         self.title = title
 
     def blit(self):
-        mouseX = pygame.mouse.get_pos()[0]
-        mouseY = pygame.mouse.get_pos()[1]
         self.surface.fill(self.menuBackgroundColor)
         pygame.draw.rect(self.surface, self.menuColor, (self.borderThickness, self.borderThickness, self.surface_w - self.borderThickness * 2, self.surface_h - self.borderThickness * 2))
         text = self.font.render(self.title, True, self.textColor)

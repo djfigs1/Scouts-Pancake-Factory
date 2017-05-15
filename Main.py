@@ -36,8 +36,6 @@ def main():
         ctypes.windll.user32.MessageBoxA(0, "This game does not support your resolution.", "Error", 0)
         quit()
 
-
-
     pygame.display.set_caption("Scout's Pancake Factory")
     Clock = pygame.time.Clock()
     state_game = False

@@ -13,6 +13,7 @@ from elements.GameElements.GameStatsWindow import GameStatsWindow
 from elements.GameElements.HUD.GameHUD import GameHUD
 from elements.GameElements.HUD.PauseWindow import PauseWindow
 from elements.GameElements.PickupItems.SpeedPowerup import SpeedPowerup
+from elements.GameElements.PickupItems.SlowPowerup import SlowPowerup
 from elements.HUDElements.FloatText import FloatText
 
 
@@ -30,7 +31,7 @@ class Game:
         self.endGame = False
         self.FloatText = FloatText(self.screen, 10)
         pygame.key.set_repeat(1,1)
-        self.pancakes = [SPFPancake(self.screen), SPFPancake(self.screen), SPFPancake(self.screen)]
+        self.pancakes = [SPFPancake(self.screen), SPFPancake(self.screen), SPFPancake(self.screen), SPFPancake(self.screen), SPFPancake(self.screen)]
         self.powerups = []
         self.pointSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/game/hitsound.wav'))
         self.winSound = pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), '../../resource/sound/game/win_music.wav'))
@@ -50,8 +51,11 @@ class Game:
         self.pause = False
         self.logger = logging.getLogger("spf")
         self.logger.info("Initializing Game")
-        self.winScore = 100
 
+        self.streak = 0
+
+        #Game Variables
+        self.winScore = 10
         #region Joystick
         # Check if there's a connected joystick.
         pygame.joystick.init()
@@ -70,8 +74,7 @@ class Game:
 
     def quit(self):
         pygame.mixer.stop()
-        self.endGame = False
-        pass
+        self.endGame = True
 
     def eventLoop(self, Clock):
         # Reset the Screen
@@ -98,10 +101,15 @@ class Game:
                         self.pancakes.remove(pancake)
                         self.pancakes.append(SPFPancake(self.screen))
                         self.score += 1
+                        self.streak += 1
+                        if (random.randint(1,20) == 20):
+                            self.powerups.append(SlowPowerup(self.screen, self.scout))
+                            self.streak = 0
                         if (random.randint(1, 20) == 20):
                             self.powerups.append(SpeedPowerup(self.screen, self.scout))
                     elif (pancakeRect[1] + pancakeRect[3] >= SU.scaleValue(1080)):
                         self.pancakes.remove(pancake)
+                        self.streak = 0
                         self.pancakes.append(SPFPancake(self.screen))
                         # self.missSound.play()
             elif (not self.gameOver and self.score >= self.winScore and self.miss < 3):

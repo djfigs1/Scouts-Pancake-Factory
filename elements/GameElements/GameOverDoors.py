@@ -1,9 +1,12 @@
 import pygame, os
 import elements.HUDElements.ScaleUtility as SU
+from elements.SPFScreenObject import SPFScreenObject
 
-class GameOverDoors:
+
+class GameOverDoors(SPFScreenObject):
 
     def __init__(self, surface):
+        SPFScreenObject.__init__(self, surface)
         self.surface = surface
         self.timeTilDeploy = 5000
         self.isDeployed = False

@@ -2,8 +2,12 @@ import pygame, os, random
 import elements.HUDElements.ScaleUtility as SU
 import ResourceManager
 import Physics
-class SPFPancake:
+from elements.SPFScreenObject import SPFScreenObject
+
+
+class SPFPancake(SPFScreenObject):
     def __init__(self, surface):
+        SPFScreenObject.__init__(self, surface)
         self.surface = surface
         self.pancake = ResourceManager.textureDictionary['pancake']
         self.x = random.randint(0, SU.scaleValue(1920) - self.pancake.get_rect().width)
