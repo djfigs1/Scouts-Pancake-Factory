@@ -10,7 +10,7 @@ class Score:
         self.x, self.y = SU.scalePos(50, 25)
 
     def blit(self, score, miss):
-        pygame.draw.circle(self.surface, (244, 161, 66), (0,self.surface.get_rect().height / 2), SU.scaleValue(200))
+        pygame.draw.circle(self.surface, (244, 161, 66), (0,int(self.surface.get_rect().height / 2)), int(SU.scaleValue(200)))
         scoreText = self.font.render(str(score), True, (255,255,255))
         # missText = self.secondaryFont.render(str(miss), True, (255,0,0)
         self.surface.blit(scoreText, (self.x, self.y))

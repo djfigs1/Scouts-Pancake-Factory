@@ -70,7 +70,7 @@ class SPFScout:
     def update(self, clock, pause):
         if not pause:
             if not self.pos == 0 or not self.vel == 0:
-                vel, pos = Physics.Gravity(800, self.pos, self.vel, float(clock.get_time()) / 1000.0)
+                vel, pos = elements.GameElements.Physics.Gravity(800, self.pos, self.vel, float(clock.get_time()) / 1000.0)
                 if (pos > 0):
                     pos = 0
                     vel = 0

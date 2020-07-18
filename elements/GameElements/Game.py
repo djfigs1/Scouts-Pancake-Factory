@@ -59,14 +59,19 @@ class Game:
         #region Joystick
         # Check if there's a connected joystick.
         pygame.joystick.init()
-        try:
-            self.joystick = pygame.joystick.Joystick(0)
-            self.joystick.init()
-        except pygame.error:
-            self.joystick = None
 
-        if self.joystick != None:
-            self.logger.info("Enabiling joystick in-game")
+        # NO JOYSTICK IT BREAKS!!!!!
+
+        self.joystick = None
+
+        # try:
+        #     self.joystick = pygame.joystick.Joystick(0)
+        #     self.joystick.init()
+        # except pygame.error:
+        #     self.joystick = None
+        #
+        # if self.joystick != None:
+        #     self.logger.info("Enabiling joystick in-game")
         #endregion
 
         self.testPowerup = SpeedPowerup(self.screen, self.scout)
