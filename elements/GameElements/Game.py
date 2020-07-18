@@ -5,7 +5,7 @@ import random
 
 import elements.ConfigUtility
 import elements.HUDElements.ScaleUtility as SU
-import ResourceManager
+import elements.GameElements.ResourceManager
 from elements.GameElements import SPFPancake
 from elements.GameElements import SPFScout
 from elements.GameElements.GameOverDoors import GameOverDoors
@@ -20,7 +20,7 @@ from elements.HUDElements.FloatText import FloatText
 class Game:
     def __init__(self, screen):
         # INIT Variables.
-        ResourceManager.__init__()
+        elements.GameElements.ResourceManager.__init__()
         self.screen = screen
         self.vol = elements.ConfigUtility.getConfigSetting("volume")
         self.scout = SPFScout(screen)

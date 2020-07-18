@@ -19,6 +19,7 @@ def main():
 
     if fullscreen:
         SCREEN_SIZE = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+        logger.info(SCREEN_SIZE)
         Screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
     else:
         SCREEN_SIZE = (elements.ConfigUtility.getConfigSetting("windowed_width"),

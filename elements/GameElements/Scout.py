@@ -1,6 +1,6 @@
 import pygame, os
 import elements.HUDElements.ScaleUtility as SU
-import Physics
+import elements.GameElements.Physics
 
 class SPFScout:
     def __init__(self, surface):

@@ -1,6 +1,6 @@
-import pygame, TSButton, elements, elements.TitleScreenElements.TitleScreen, os
+import pygame, elements, elements.TitleScreenElements.TitleScreen, os
 import elements.HUDElements.ScaleUtility as SU
-
+from elements.TitleScreenElements import TSButton
 class TSWindow(object):
     def __init__(self, surface):
         self.surface = surface

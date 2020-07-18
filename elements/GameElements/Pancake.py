@@ -1,7 +1,7 @@
 import pygame, os, random
 import elements.HUDElements.ScaleUtility as SU
-import ResourceManager
-import Physics
+import elements.GameElements.ResourceManager
+import elements.GameElements.Physics
 from elements.SPFScreenObject import SPFScreenObject
 
 
@@ -9,7 +9,7 @@ class SPFPancake(SPFScreenObject):
     def __init__(self, surface):
         SPFScreenObject.__init__(self, surface)
         self.surface = surface
-        self.pancake = ResourceManager.textureDictionary['pancake']
+        self.pancake = elements.GameElements.ResourceManager.textureDictionary['pancake']
         self.x = random.randint(0, SU.scaleValue(1920) - self.pancake.get_rect().width)
         self.y = -random.randint(self.pancake.get_rect().height, SU.scaleValue(300))
 
@@ -31,7 +31,7 @@ class SPFPancake(SPFScreenObject):
         self.prevVol = vel
 
     def update(self, clock):
-        vel, pos = Physics.Gravity(self.gravityAccel, self.prevPos, self.prevVol, float(clock.get_time()) / 1000.0)
+        vel, pos = elements.GameElements.Physics.Gravity(self.gravityAccel, self.prevPos, self.prevVol, float(clock.get_time()) / 1000.0)
         self.prevVol, self.prevPos = vel, pos
         self.y = self.prevPos
         self.blit()

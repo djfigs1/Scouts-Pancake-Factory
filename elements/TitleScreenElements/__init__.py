@@ -1,2 +1,2 @@
-from TitleScreen import TitleScreen
-from TSButton import TSButton
+from elements.TitleScreenElements.TitleScreen import TitleScreen
+from elements.TitleScreenElements.TSButton import TSButton

@@ -6,7 +6,7 @@ class SPFScreenObject(object):
         self.testVariable = 0
 
     def blit(self):
-        # Should be usedg only, should NOT update any values within the class.
+        # Should be used only to draw, should NOT update any values within the class.
         pass
 
     def update(self):

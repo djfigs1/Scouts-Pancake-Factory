@@ -1,2 +1,2 @@
-from FloatText import FloatText
-import ScaleUtility
+from elements.HUDElements.FloatText import FloatText
+import elements.HUDElements.ScaleUtility

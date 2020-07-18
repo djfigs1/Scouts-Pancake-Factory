@@ -1,5 +1,5 @@
 import pygame, time, os, logging
-import ScaleUtility as SU
+from elements.HUDElements import ScaleUtility as SU
 
 class FloatText:
     def __init__(self, surface, y):

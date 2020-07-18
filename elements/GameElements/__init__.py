@@ -1,2 +1,2 @@
-from Scout import SPFScout
-from Pancake import SPFPancake
+from elements.GameElements.Scout import SPFScout
+from elements.GameElements.Pancake import SPFPancake
